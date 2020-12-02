@@ -1,17 +1,23 @@
 package main
 
 import (
-	"golang/structure"
+	"golang/web"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	person := &structure.Person{}
-	person.Name = "胡康"
-	person.Age = 29
-	person.Gender = 1
-	person.FmtPersion()
-
-	var i structure.Methods
-	i = person
-	i.FmtPersion()
+	router := gin.Default()
+	
+	s := &http.Server{
+		Addr:           ":9000",
+		Handler:        router,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	router.GET("/register", web.Register)
+	s.ListenAndServe()
 }

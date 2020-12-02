@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"runtime"
 	"time"
@@ -63,4 +64,53 @@ func Read() {
 		fmt.Println("read context:", string(buf))
 	}
 	runtime.Goexit()
+}
+
+type Account interface{
+	 Withdraw(uint)
+	 Deposit(uint)
+	 Balance() int
+}
+
+type Bank struct{
+	account Account
+}
+
+func NewBank(account Account) *Bank{
+	return &Bank{account: account}
+}
+
+func (bank *Bank)Withraw(amount uint,actor_name string){
+	fmt.Println("[-]",amount,actor_name)
+	bank.account.Withdraw(amount)
+}
+
+func(bank *Bank)Deposit(amount uint,actor_name string){
+	fmt.Println("[+]",amount,actor_name)
+	bank.account.Deposit(amount)
+}
+
+func(bank *Bank) Balance()int{
+	return bank.account.Balance()
+}
+
+type SimpleAccount struct{
+	Balance int
+}
+
+func NewSimpleAccount(balance int) * SimpleAccount{
+	return &SimpleAccount{Balance: balance}
+}
+func(acc *SimpleAccount)Deposit(amount uint){
+	acc.setBalance(acc.Balance + int(amount))
+}
+func (acc *SimpleAccount)BalanceInit()int{
+	return acc.Balance
+}
+func (acc *SimpleAccount)setBalance(balance int){
+	acc.add_some_latency()
+	acc.Balance = balance
+}
+func (acc *SimpleAccount)add_some_latency(){
+	<-time.After(time.Duration(rand.Intn(100))*time.Millisecond)
 }
