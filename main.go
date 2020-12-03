@@ -1,6 +1,7 @@
 package main
 
 import (
+	"golang/orm"
 	"golang/web"
 	"net/http"
 	"time"
@@ -9,8 +10,9 @@ import (
 )
 
 func main() {
+	orm.Init()
 	router := gin.Default()
-	
+
 	s := &http.Server{
 		Addr:           ":9000",
 		Handler:        router,
@@ -18,6 +20,6 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	router.GET("/register", web.Register)
+	router.GET("/init", web.Init)
 	s.ListenAndServe()
 }

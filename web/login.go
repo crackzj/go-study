@@ -9,12 +9,18 @@ import (
 
 //Register 注册用户.
 func Register(ctx *gin.Context) {
-	orm.Insert()
 	ctx.JSON(http.StatusOK, gin.H{
 		"msg": "success",
 	})
 }
 
+//Init 返回初始化数据
+func Init(ctx *gin.Context) {
+	// roles := orm.Role{}
+	// orm.FindAll()
+	
+
+}
 
 // func Login() {
 
