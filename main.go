@@ -1,7 +1,6 @@
 package main
 
 import (
-	"golang/orm"
 	"golang/web"
 	"net/http"
 	"time"
@@ -10,9 +9,7 @@ import (
 )
 
 func main() {
-	orm.Init()
 	router := gin.Default()
-
 	s := &http.Server{
 		Addr:           ":9000",
 		Handler:        router,

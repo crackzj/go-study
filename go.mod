@@ -9,12 +9,12 @@ require (
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/ugorji/go v1.2.0 // indirect
-	golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392 // indirect
-	golang.org/x/sys v0.0.0-20201201145000-ef89a241ccb3 // indirect
+	github.com/ugorji/go v1.2.1 // indirect
+	golang.org/x/crypto v0.0.0-20201203163018-be400aefbc4c // indirect
+	golang.org/x/sys v0.0.0-20201204225414-ed752295db88 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/driver/sqlite v1.1.4 // indirect
-	gorm.io/gorm v1.20.7
+	gorm.io/gorm v1.20.8
 )

@@ -1,31 +1,34 @@
 package orm
 
 import (
-	"fmt"
 	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func Init() {
-	db := conn()
+func init() {
+	db := Conn()
 	err := db.AutoMigrate(Login{}, Role{})
 	if err != nil {
 		log.Fatal("create table false", err)
 	}
 	usr := Login{}
-	usr.Usr = "lsy"
-	usr.Role = 0
-	usr.RoleValue = "管理员"
-	usr.Pwd = "lsy0123"
-	db.Create(&usr)
+	if res := db.Where("usr=?", "lsy").First(&usr); res.RowsAffected == 0 {
+		usr.Usr = "lsy"
+		usr.Role = 0
+		usr.RoleValue = "管理员"
+		usr.Pwd = "lsy0123"
+		db.Create(&usr)
+	}
 	role := Role{}
-	role.Role = 0
-	role.RoleValue = "管理员"
-	db.Create(&role)
+	if res := db.Where("role=?", 0).First(&role); res.RowsAffected == 0 {
+		role.Role = 0
+		role.RoleValue = "管理员"
+		db.Create(&role)
+	}
 }
-func conn() *gorm.DB {
+func Conn() *gorm.DB {
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       "myview:lsy0123@tcp(127.0.0.1:3306)/myview?charset=utf8mb4&parseTime=True&loc=Local",
 		DefaultStringSize:         256,   // string 类型字段的默认长度
@@ -36,36 +39,39 @@ func conn() *gorm.DB {
 
 	}), &gorm.Config{})
 	if err != nil {
-		log.Fatal("mysql connect failed,", err)
+		log.Fatal("mysql Connect failed,", err)
 	}
 	return db
 }
 
-func Insert(i interface{}) {
-	conn().Create(i)
+//InsertOne 插入单条数据.
+func InsertOne(i interface{}) {
+	Conn().Create(i)
 }
 
+//FindOne 查询单条数据.
 func FindOne() {
 
 }
 
-func FindAll(tableName string,conditionField map[string]string,selectField ...string)(res interface{}) {
-	if len(selectField) == 0{
+//FindAll use raw sql.
+// res 结构体.
+// tableName 查询表名.
+// selectField 查询字段 为空则查询所有.
+// conditionField 条件字段.
+func FindAll(res interface{}, tableName string, conditionField string, selectField ...string) interface{} {
+	if len(selectField) == 0 {
 		selectField = []string{"*"}
 	}
 	str := "SELECT "
-	for _,v := range selectField{
-		str += v + ", " 
+	for _, v := range selectField {
+		str += v + ", "
 	}
-	str += " FROM "+ tableName
-	if len(conditionField)>0{
-		
-		return
+	str += " FROM " + tableName
+	if len(conditionField) > 0 {
+		Conn().Table(tableName).Select(selectField).Where(conditionField).Scan(res)
+		return res
 	}
-	conn().Table(tableName).Select(selectField).Scan(res)
-	return
-}
-func FindAllRaw(sql string,conditionField ...string)(res interface{}){
-	conn().Raw(sql,)
-	return
+	Conn().Table(tableName).Select(selectField).Scan(res)
+	return res
 }
